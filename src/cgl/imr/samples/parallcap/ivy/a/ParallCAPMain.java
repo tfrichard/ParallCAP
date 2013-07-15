@@ -19,6 +19,7 @@ public class ParallCAPMain {
 	
 	public ParallCAPMain() {
 		qns = new Qns();
+		queryIdMatrix = new HashMap<Integer, Map<Integer, List<Integer>>>();
 		final List<Node> queryList = qns.getQueryNodes();
 		for (int i = 0; i < queryList.size() - 1; i++) {
 			queryIdMatrix.put(queryList.get(i).getId(), 
@@ -36,6 +37,7 @@ public class ParallCAPMain {
 			for (Integer n: queryIdMatrix.get(m).keySet()) {
 				System.out.println("( " + m + ", " + n + " )");
 			}
+			System.out.println("\n");
 		}
 	}
 	
@@ -54,7 +56,7 @@ public class ParallCAPMain {
 		 * @param args
 		 * @throws Exception
 		 * */
-		
+		ParallCAPMain pcapMain = new ParallCAPMain();	
 
 	}
 	
