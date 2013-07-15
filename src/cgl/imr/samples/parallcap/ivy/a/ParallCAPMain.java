@@ -54,7 +54,35 @@ public class ParallCAPMain {
 		 * @param args
 		 * @throws Exception
 		 * */
+		if (args.length != 3) {
+			String errorReport = "ParallelCap: the Correct arguments are \n"
+					+ "java cgl.imr.samples.parallcap.parallelcapmain "
+					+ "<partition file> <num map tasks> <num reduce tasks> <numLoop>";
+			System.out.println(errorReport);
+			System.exit(0);
+		}
 		
+		String partitionFile = args[0];
+		int numMapTasks = Integer.parseInt(args[1]);
+		int numReduceTasks = Integer.parseInt(args[2]);
+		int numLoop = Integer.parseInt(args[3]);
+		List<Value> grayNodes = null;
+		double beginTime = System.currentTimeMillis();
+		try {
+			grayNodes = ParallCAPMain.driveMapReduce(numMapTasks, numReduceTasks, partitionFile, numLoop);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		double endTime = System.currentTimeMillis();
+		
+		// Print test stats
+		double timeInSeconds = ((double)(endTime - beginTime)) / 1000;
+		System.out
+				.println("------------------------------------------------------");
+		System.out.println("Parallel Cap took " + timeInSeconds
+				+ " seconds.");
+		System.out
+				.println("------------------------------------------------------");
 
 	}
 	
