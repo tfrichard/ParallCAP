@@ -47,8 +47,22 @@ public class testcase extends TestCase {
 	public void test3PermGen()
 	{
 		Qns qns = new Qns();
-		List<int[]> actual =  qns.permutationHelperImpl(5);
-		actual.toArray();
+		//List<int[]> actual =  qns.permutationHelperImpl(5);
+		//actual.toArray();
+	}
+	
+	@Test
+	public void testQnsCombGen() {
+		Qns qns = new Qns();
+		//List<List<Node>> combNodes = qns.combinationHelper(2, 4);
+		//combNodes.toArray();
+	}
+	
+	@Test
+	public void testQnsGen() {
+		Qns qns = new Qns();
+		List<List<Node>> candNodes = qns.generateCandQns();
+		candNodes.toArray();
 	}
 
 }

@@ -1,0 +1,66 @@
+package cgl.imr.samples.parallcap.ivy.a;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import cgl.imr.base.Combiner;
+import cgl.imr.base.Key;
+import cgl.imr.base.TwisterException;
+import cgl.imr.base.Value;
+import cgl.imr.base.impl.JobConf;
+import cgl.imr.types.IntKey;
+
+public class ParallelCAPCombiner implements Combiner {
+
+	SortedMap<Key, Value> results;
+
+	private class KeyComparator implements Comparator<Key> {
+		@Override
+		public int compare(Key key1, Key key2) {
+			int k1 = ((IntKey) key1).getKey();
+			int k2 = ((IntKey) key2).getKey();
+
+			if (k1 < k2) {
+				return -1;
+			} else if (k1 == k2) {
+				return 0;
+			} else {
+				return 1;
+			}
+		}
+	}
+
+	public ParallelCAPCombiner() {
+		results = Collections.synchronizedSortedMap(new TreeMap<Key, Value>(
+				new KeyComparator()));
+	}
+
+	public void close() throws TwisterException {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * Combines the reduce outputs to a single value.
+	 */
+	public void combine(Map<Key, Value> keyValues) throws TwisterException {
+		// synchronized (this) {
+		for (Key key : keyValues.keySet()) {
+			this.results.put(key, keyValues.get(key));
+		}
+		// }
+	}
+
+	public void configure(JobConf jobConf) throws TwisterException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public List<Value> getResults() {
+		return new ArrayList<Value>(results.values());
+	}
+}

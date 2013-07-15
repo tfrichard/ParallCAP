@@ -1,28 +1,110 @@
 package cgl.imr.samples.parallcap.ivy.a;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.*;
 
 public class Qns {
-	private List<Node> queryNodes;
-	private int numOfCoverage;
-	private int sizeOfQueryNodes;
-	private int length;
-	private Node src;
-	private Node dest;
-	private List<List<Node>> candidateQns;
+	private static List<Node> queryNodes;
+	private static int numOfCoverage;
+	private static int sizeOfQueryNodes;
+	private static int length;
+	private static Node src;
+	private static Node dest;
+	private static List<List<Node>> candidateQns;
+	
+	public Qns() {
+		FileInputStream fstream = null;
+		
+		try {
+			fstream = new FileInputStream("/Users/feiteng/workspace/ParallCAP/src/constraints");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-	private void permutationHelper() {}
-	//private void nextPermutation(List<Node>) {}
+		// Get the object of DataInputStream
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+		String strline;
+
+		//Read File Line By Line
+		try {
+			while ((strline = br.readLine()) != null)   {
+			  // Print the content on the console
+			  System.out.println (strline);
+			  String[] splits = strline.split("=");
+			  if (splits[0].equalsIgnoreCase(CAPConstraints.coverageNum)) {
+				  numOfCoverage = Integer.parseInt(splits[1]);
+			  } else if (splits[0].equalsIgnoreCase(CAPConstraints.length)) {
+				  length = Integer.parseInt(splits[1]);
+			  } else if (splits[0].equalsIgnoreCase(CAPConstraints.queryNodes)) {
+				  queryNodes = new ArrayList<Node>();
+				  String[] queryIds = splits[1].split(",");
+				  for (String elem : queryIds) {
+					  Node node = new Node(Integer.parseInt(elem));
+					  queryNodes.add(node);
+				  }
+				  sizeOfQueryNodes = queryNodes.size();
+				  src = new Node(queryNodes.get(0).getId());
+				  dest = new Node(queryNodes.get(queryNodes.size() - 1).getId());
+			  } else {
+				  System.out.println("Invalid parameter, exit!");
+				  System.exit(1);
+			  }
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//Close the input stream
+		try {
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public static List<Node> getQueryNodes() {
+		return queryNodes;
+	}
+
+	private List<List<Node>> permutationHelper(List<Node> permNodes) {
+		List<List<Node>> permRes = new ArrayList<List<Node>>();
+		List<int[]> permIndexList = permutationHelperImpl(permNodes.size());
+		
+		for (int[] elem : permIndexList) {
+			List<Node> tmp = new ArrayList<Node>();
+			for (int i : elem) {
+				tmp.add(permNodes.get(i));
+			}
+			permRes.add(tmp);
+		}
+		
+		return permRes;
+	}
 	
 	public List<List<Node>> generateCandQns() {
-		candidateQns = null;
-		if (length >= sizeOfQueryNodes) return candidateQns;
+		candidateQns = new ArrayList<List<Node>>();
+		if (length > sizeOfQueryNodes + 1) return null;
 		
 		//generate k-permutation sequences from query nodes list
-		List<List<Node>> localPermRes = null;
+		List<List<Node>> tmpCombRes = null;
 		for (int k = 1; k <= numOfCoverage; k++) {
-			localPermRes = combinationHelper(k, numOfCoverage);
-			//permutationHelper(k, localPermRes);
+			tmpCombRes = combinationHelper(k, sizeOfQueryNodes);
+			for (List<Node> comb : tmpCombRes) {
+				candidateQns.addAll(permutationHelper(comb));
+			}
 		}
 		
 		return candidateQns;
@@ -31,8 +113,16 @@ public class Qns {
 	//implementation of combination generator of "the art of computer programming"
 	//section 7.2.2.2
 	private List<List<Node>> combinationHelper(int k, int n) {
-		//Initial
 		List<List<Node>> res = new ArrayList<List<Node>>();
+		List<int[]> combRes = combinationHelperImpl(k, n);
+		for (int[] elem : combRes) {
+			Arrays.sort(elem);
+			List<Node> tmp = new ArrayList<Node>();
+			for (int i : elem) {
+				tmp.add(queryNodes.get(i));
+			}
+			res.add(new ArrayList<Node>(tmp));
+		}
 		return res;
 	}
 	
@@ -79,7 +169,7 @@ public class Qns {
 		return res;
 	}
 	
-	public List<int[]> permutationHelperImpl(int k) {
+	private List<int[]> permutationHelperImpl(int k) {
 		List<int[]> res = new ArrayList<int[]>();
 		int[] elemToPerm = new int[k];
 		for(int i = 0; i < k; i++) {
