@@ -1,6 +1,7 @@
 package cgl.imr.samples.parallcap.ivy.a;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import cgl.imr.base.SerializationException;
 import cgl.imr.base.TwisterMessage;
@@ -17,11 +18,22 @@ public class Node implements Value {
 	private String tag;
 	//traceHistory records the path along which query nodes come to the node
 	private int numOfTraceNodes;
-	List<Integer> traceHistrory;
+	private List<Integer> traceHistrory;
 	
+	public Node() {
+		id = -1;
+		tag = "";
+		numOfTraceNodes = 0;
+		traceHistrory = null;
+		}
+
+
 	public Node(int parseInt) {
 		// TODO Auto-generated constructor stub
 		id = parseInt;
+		tag = CAPConstraints.Write;
+		numOfTraceNodes = 0;
+		traceHistrory = new ArrayList<Integer>();
 	}
 	public Node(int id2, String tag2) {
 		// TODO Auto-generated constructor stub
@@ -69,6 +81,7 @@ public class Node implements Value {
 		tag = msg.readString();		
 		numOfTraceNodes = msg.readInt();
 
+		traceHistrory = new ArrayList<Integer>();
 		int tmpId = -1;	
 		for (int i = 0; i < numOfTraceNodes; i++) {
 			tmpId = msg.readInt();

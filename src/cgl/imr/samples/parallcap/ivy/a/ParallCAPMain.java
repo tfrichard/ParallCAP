@@ -1,5 +1,6 @@
 package cgl.imr.samples.parallcap.ivy.a;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,13 +13,23 @@ import cgl.imr.base.Value;
 import cgl.imr.base.impl.JobConf;
 import cgl.imr.client.TwisterDriver;
 import cgl.imr.types.MemCacheAddress;
+import cgl.imr.base.SerializationException;
 
 public class ParallCAPMain {
 	private static Map<Integer, Map<Integer, List<Integer>>> queryIdMatrix;
 	private static Qns qns;
 	
-	public ParallCAPMain() {
+	public ParallCAPMain() throws SerializationException{
 		qns = new Qns();
+
+		try {
+		Class testClass = Class.forName("cgl.imr.samples.parallcap.ivy.a.Node");
+		Value node = (Value)testClass.newInstance();
+		System.out.println("test node id: " + ((Node)node).getId());
+		} catch (Exception e) {
+			throw new SerializationException(e);
+			};
+
 		queryIdMatrix = new HashMap<Integer, Map<Integer, List<Integer>>>();
 		final List<Node> queryList = qns.getQueryNodes();
 		for (int i = 0; i < queryList.size() - 1; i++) {
@@ -57,6 +68,42 @@ public class ParallCAPMain {
 		 * @throws Exception
 		 * */
 		ParallCAPMain pcapMain = new ParallCAPMain();	
+		if (args.length != 4) {
+			String errorReport = "ParallelCap: the Correct arguments are \n"
+					+ "java cgl.imr.samples.parallcap.parallelcapmain "
+					+ "<partition file> <num map tasks> <num reduce tasks> <numLoop>";
+			System.out.println(errorReport);
+			System.exit(0);
+		}
+		
+		String partitionFile = args[0];
+		int numMapTasks = Integer.parseInt(args[1]);
+		int numReduceTasks = Integer.parseInt(args[2]);
+		int numLoop = Integer.parseInt(args[3]);
+		List<Value> grayNodes = new ArrayList<Value>();
+		int ids = new int[qns.getQueryNodes().size()];
+		for (int i = 0; i < qns.getQueryNodes().size(); i++) {
+			ids[i] = qns.getQueryNodes().get(i).getId();
+		}
+		IntVectorValue intVecVal = new IntVectorValue(ids.length, ids);
+		grayNodes.add(intVecVal);
+
+		double beginTime = System.currentTimeMillis();
+		try {
+			grayNodes = ParallCAPMain.driveMapReduce(numMapTasks, numReduceTasks, partitionFile, numLoop);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		double endTime = System.currentTimeMillis();
+		
+		// Print test stats
+		double timeInSeconds = ((double)(endTime - beginTime)) / 1000;
+		System.out
+				.println("------------------------------------------------------");
+		System.out.println("Parallel Cap took " + timeInSeconds
+				+ " seconds.");
+		System.out
+				.println("------------------------------------------------------");
 
 	}
 	

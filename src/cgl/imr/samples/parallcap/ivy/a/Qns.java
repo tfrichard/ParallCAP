@@ -22,7 +22,7 @@ public class Qns {
 		FileInputStream fstream = null;
 		
 		try {
-			fstream = new FileInputStream("/Users/feiteng/workspace/ParallCAP/src/constraints");
+			fstream = new FileInputStream("./constraints");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -86,7 +86,7 @@ public class StaticGraphData implements Value {
 			List<Node> oneAdjlist = new ArrayList<Node>();
 			for (String ids : nodeIds) {
 				int id = Integer.parseInt(ids);
-				Node node = new Node(id, CAPConstraints.Write);
+				Node node = new Node(id);
 				oneAdjlist.add(node);
 			}
 			adjlist.add(oneAdjlist);
