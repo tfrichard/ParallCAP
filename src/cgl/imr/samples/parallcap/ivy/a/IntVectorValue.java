@@ -8,6 +8,17 @@ public class IntVectorValue implements Value {
 	int num;
 	int[] array;
 	
+	public IntVectorValue() {
+		num = 0;
+		array = null;
+	}
+	
+	public IntVectorValue(int length, int[] ids) {
+		// TODO Auto-generated constructor stub
+		num = length;
+		array = ids;
+	}
+
 	public int getNum() {
 		return num;
 	}
@@ -25,17 +36,24 @@ public class IntVectorValue implements Value {
 	}
 
 	@Override
-	public void fromTwisterMessage(TwisterMessage arg0)
+	public void fromTwisterMessage(TwisterMessage msg)
 			throws SerializationException {
 		// TODO Auto-generated method stub
-		
+		num = msg.readInt();
+		array = new int[num];
+		for (int i = 0; i < num; i++) {
+			array[i] = msg.readInt();
+		}
 	}
 
 	@Override
-	public void toTwisterMessage(TwisterMessage arg0)
+	public void toTwisterMessage(TwisterMessage msg)
 			throws SerializationException {
 		// TODO Auto-generated method stub
-		
+		msg.writeInt(num);
+		for (int i : array) {
+			msg.writeInt(i);
+		}
 	}
 
 	@Override
