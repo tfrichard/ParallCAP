@@ -80,13 +80,7 @@ public class ParallCAPMain {
 		int numMapTasks = Integer.parseInt(args[1]);
 		int numReduceTasks = Integer.parseInt(args[2]);
 		int numLoop = Integer.parseInt(args[3]);
-		List<Value> grayNodes = new ArrayList<Value>();
-		int ids = new int[qns.getQueryNodes().size()];
-		for (int i = 0; i < qns.getQueryNodes().size(); i++) {
-			ids[i] = qns.getQueryNodes().get(i).getId();
-		}
-		IntVectorValue intVecVal = new IntVectorValue(ids.length, ids);
-		grayNodes.add(intVecVal);
+		List<Value> grayNodes = null;
 
 		double beginTime = System.currentTimeMillis();
 		try {
@@ -122,9 +116,19 @@ public class ParallCAPMain {
 		driver.configureMaps(partitionFile);
 		
 		List <Value> grayNodes = new ArrayList<Value>();
-		for (Node node : qns.getQueryNodes()) {
-			grayNodes.add(node);
+		int[] ids = new int[qns.getQueryNodes().size()];
+		//int[] ids = new int[1024];
+		for (int i = 0; i < qns.getQueryNodes().size(); i++) {
+			ids[i] = qns.getQueryNodes().get(i).getId();
 		}
+		//increase data size to overcome connection defect
+		/*
+		for (int i = 0; i < 500; i++) {
+			ids[i + 50] = i;
+			}
+		*/
+		IntVectorValue intVecVal = new IntVectorValue(ids.length, ids);
+		grayNodes.add(intVecVal);
 		
 		int bfsIterCnt = 0;
 		for (; bfsIterCnt < numLoop; bfsIterCnt++) {

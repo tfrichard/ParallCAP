@@ -26,7 +26,6 @@ public class ParallCAPMapTask implements MapTask {
 	private StaticGraphData graph;
 	private Map<Integer, Node> headNodes;
 	private JobConf jobConf;
-	private List<Node> queryNodes;
 	private Map<Integer, List<Node>> nodeMap;
 
 	@Override
@@ -42,7 +41,6 @@ public class ParallCAPMapTask implements MapTask {
 		this.jobConf = jobConf;
 		FileData fileData = (FileData) mapConf.getDataPartition();
 		this.graph = new StaticGraphData();
-		this.queryNodes = Qns.getQueryNodes();
 		this.nodeMap = new HashMap<Integer, List<Node>>();
 		this.headNodes = new HashMap<Integer, Node>();
 		
@@ -64,6 +62,7 @@ public class ParallCAPMapTask implements MapTask {
 	@Override
 	public void map(MapOutputCollector mapOutputCollector, Key key, Value val)
 			throws TwisterException {
+		System.out.println("MapTask is started!");
 		System.out.println("Job: " + jobConf.getJobId() + "\n" +
 			"MapTask: " + jobConf.getMapClass());
 		
@@ -86,17 +85,8 @@ public class ParallCAPMapTask implements MapTask {
 		List<Node> curList = null;
 		
 		for (Node node : headNodes.values()) {
-			if (node.getTag().equalsIgnoreCase(CAPConstraints.Write) &&
-					queryNodes.contains(node)) {
-				curList = nodeMap.get(node.getId());
-				for (Node curNode : curList) {
-					curNode.setTag(CAPConstraints.Gray);
-					curNode.getTraceHistrory().add(node.getId());
-					mapOutputKeyValues.put(new IntKey(curNode.getId()), 
-							curNode);
-				}
-				node.setTag(CAPConstraints.Black);
-			} else if (node.getTag().equalsIgnoreCase(CAPConstraints.Gray)) {
+			System.out.println("cur node color is " + node.getTag());
+			if (node.getTag().equalsIgnoreCase(CAPConstraints.Gray)) {
 				curList = nodeMap.get(node.getId());
 				for (Node curNode : curList) {
 					curNode.setTag(CAPConstraints.Gray);
@@ -113,6 +103,7 @@ public class ParallCAPMapTask implements MapTask {
 			mapOutputCollector.collect(mapOutputKeyValues);
 		
 		mapOutputKeyValues.clear();
+		System.out.println("Map task is completed!");
 	}
 	
 }
