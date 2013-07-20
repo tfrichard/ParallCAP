@@ -1,7 +1,9 @@
 package cgl.imr.samples.parallcap.ivy.a;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import cgl.imr.base.SerializationException;
 import cgl.imr.base.TwisterMessage;
@@ -16,14 +18,18 @@ public class Node implements Value {
 	 * black: has been expanded and will never be expanded again
 	 * */
 	private String tag;
-	//traceHistory records the path along which query nodes come to the node
-	private int numOfTraceNodes;
-	private List<Integer> traceHistrory;
+	//how many paths going through the node
+	private int pathCount;
+	//how many nodes each path has
+	private List<Integer> numOfTraceNodes;
+	//nodes on each path
+	private List<List<Integer>> traceHistrory;
 	
 	public Node() {
 		id = -1;
 		tag = "";
-		numOfTraceNodes = 0;
+		numOfTraceNodes = null;
+		pathCount = 0;
 		traceHistrory = null;
 		}
 
@@ -32,19 +38,12 @@ public class Node implements Value {
 		// TODO Auto-generated constructor stub
 		id = parseInt;
 		tag = CAPConstraints.Write;
-		numOfTraceNodes = 0;
-		traceHistrory = new ArrayList<Integer>();
+		numOfTraceNodes = new ArrayList<Integer>();
+		pathCount = 0;
+		traceHistrory = new ArrayList<List<Integer>>();
 	}
-	public Node(int id2, String tag2) {
-		// TODO Auto-generated constructor stub
-		id = id2;
-		tag = tag2;
-	}
-	public Node(int _id, String _tag, int _num) {
-		id = _id;
-		tag = _tag;
-		numOfTraceNodes = _num;
-	}
+	
+	public void incPathCnt() { this.pathCount += 1; }
 	
 	public int getId() {
 		return id;
@@ -59,33 +58,47 @@ public class Node implements Value {
 		this.tag = tag;
 	}
 	
-	public List<Integer> getTraceHistrory() {
+	public List<List<Integer>> getTraceHistrory() {
 		return traceHistrory;
 	}
-	public void setTraceHistrory(List<Integer> traceHistrory) {
+	public void setTraceHistrory(List<List<Integer>> traceHistrory) {
 		this.traceHistrory = traceHistrory;
 	}
 	
-	public int getNumOfTraceNodes() {
+	public List<Integer> getNumOfTraceNodes() {
 		return numOfTraceNodes;
 	}
-	public void setNumOfTraceNodes(int numOfTraceNodes) {
+	public void setNumOfTraceNodes(List<Integer> numOfTraceNodes) {
 		this.numOfTraceNodes = numOfTraceNodes;
 	}
 	
+	public int getPathCount() {
+		return pathCount;
+	}
+
+
+	public void setPathCount(int pathCount) {
+		this.pathCount = pathCount;
+	}
+
+
 	@Override
 	public void fromTwisterMessage(TwisterMessage msg)
 			throws SerializationException {
 		// TODO Auto-generated method stub
 		id = msg.readInt();
-		tag = msg.readString();		
-		numOfTraceNodes = msg.readInt();
+		tag = msg.readString();	
+		pathCount = msg.readInt();
+		numOfTraceNodes = new ArrayList<Integer>();
+		for (int i = 0; i < pathCount; i++)
+			numOfTraceNodes.add(msg.readInt());		
+		traceHistrory = new ArrayList<List<Integer>>();
 
-		traceHistrory = new ArrayList<Integer>();
-		int tmpId = -1;	
-		for (int i = 0; i < numOfTraceNodes; i++) {
-			tmpId = msg.readInt();
-			this.getTraceHistrory().add(tmpId);
+		for (int i = 0; i < pathCount; i++) {
+			traceHistrory.add(new ArrayList<Integer>());
+			for (int j = 0; j < numOfTraceNodes.get(i); j++) {
+				traceHistrory.get(i).add(msg.readInt());
+			}
 		}
 	}
 	
@@ -95,10 +108,14 @@ public class Node implements Value {
 		// TODO Auto-generated method stub
 		msg.writeInt(id);
 		msg.writeString(tag);
-		msg.writeInt(numOfTraceNodes);
-		
-		for (int i = 0; i < numOfTraceNodes; i++) {
-			msg.writeInt(traceHistrory.get(i));
+		msg.writeInt(pathCount);
+		for (Integer i : numOfTraceNodes) {
+			msg.writeInt(i);
+		}
+		for (int i = 0; i < pathCount; i++) {
+			for (int j = 0; j < numOfTraceNodes.get(i); j++) {
+				msg.writeInt(traceHistrory.get(i).get(j));
+			}
 		}
 	}
 	@Override

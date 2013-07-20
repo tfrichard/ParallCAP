@@ -10,7 +10,7 @@ import cgl.imr.base.SerializationException;
 import cgl.imr.base.TwisterMessage;
 import cgl.imr.base.Value;
 
-public class StaticGraphData implements Value {
+public class StaticGraphData {
 	private int numOfNodes;
 	private List<List<Node>> adjlist;
 	
@@ -33,41 +33,6 @@ public class StaticGraphData implements Value {
 	public StaticGraphData() {
 		numOfNodes = 0;
 		adjlist = new ArrayList<List<Node>>();
-	}
-
-	@Override
-	public void fromTwisterMessage(TwisterMessage msg)
-			throws SerializationException {
-		// TODO Auto-generated method stub
-		numOfNodes = msg.readInt();
-		List<Node> tmpAdjList = new ArrayList<Node>();
-		int id;
-		String tag;
-		for (int i = 0; i < numOfNodes; i++) {
-			id = msg.readInt();
-			tag = msg.readString();
-			tmpAdjList.add(new Node(id, tag));
-		}
-		adjlist.add(tmpAdjList);
-	}
-
-	@Override
-	public void toTwisterMessage(TwisterMessage msg)
-			throws SerializationException {
-		// TODO Auto-generated method stub
-		msg.writeInt(numOfNodes);
-		for (int i = 0; i < numOfNodes; i++) {
-			for (Node adjElem : adjlist.get(i)) {
-				msg.writeInt(adjElem.getId());
-				msg.writeString(adjElem.getTag());
-			}
-		}
-	}
-
-	@Override
-	public void mergeInShuffle(Value msg) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/*

@@ -14,8 +14,6 @@ public class Qns {
 	private static int numOfCoverage;
 	private static int sizeOfQueryNodes;
 	private static int length;
-	private static Node src;
-	private static Node dest;
 	private static List<List<Node>> candidateQns;
 	
 	public Qns() {
@@ -52,8 +50,6 @@ public class Qns {
 					  queryNodes.add(node);
 				  }
 				  sizeOfQueryNodes = queryNodes.size();
-				  src = new Node(queryNodes.get(0).getId());
-				  dest = new Node(queryNodes.get(queryNodes.size() - 1).getId());
 			  } else {
 				  System.out.println("Invalid parameter, exit!");
 				  System.exit(1);
@@ -75,7 +71,7 @@ public class Qns {
 		
 	}
 	
-	public static List<Node> getQueryNodes() {
+	public List<Node> getQueryNodes() {
 		return queryNodes;
 	}
 

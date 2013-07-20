@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.safehaus.uuid.UUIDGenerator;
 
@@ -85,6 +86,10 @@ public class ParallCAPMain {
 		double beginTime = System.currentTimeMillis();
 		try {
 			grayNodes = ParallCAPMain.driveMapReduce(numMapTasks, numReduceTasks, partitionFile, numLoop);
+			System.out.println("Current gray nodes: ");
+			for (Value val : grayNodes) {
+				System.out.println(((Node)val).getId());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,19 +121,10 @@ public class ParallCAPMain {
 		driver.configureMaps(partitionFile);
 		
 		List <Value> grayNodes = new ArrayList<Value>();
-		int[] ids = new int[qns.getQueryNodes().size()];
-		//int[] ids = new int[1024];
-		for (int i = 0; i < qns.getQueryNodes().size(); i++) {
-			ids[i] = qns.getQueryNodes().get(i).getId();
-		}
-		//increase data size to overcome connection defect
-		/*
-		for (int i = 0; i < 500; i++) {
-			ids[i + 50] = i;
-			}
-		*/
-		IntVectorValue intVecVal = new IntVectorValue(ids.length, ids);
-		grayNodes.add(intVecVal);
+		//initialize the dynamic data first
+		int grayNodeSize = qns.getQueryNodes().size();
+		NodeVectorValue nodeVecVal = new NodeVectorValue(grayNodeSize, qns.getQueryNodes());
+		grayNodes.add(nodeVecVal);
 		
 		int bfsIterCnt = 0;
 		for (; bfsIterCnt < numLoop; bfsIterCnt++) {

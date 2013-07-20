@@ -71,36 +71,41 @@ public class ParallCAPMapTask implements MapTask {
 		if (memCacheKey.getRange() != 1) {
 			throw new TwisterException("MemCache size is not 1.");
 		}
-		IntVectorValue grayNodes = (IntVectorValue) (MemCache
+		NodeVectorValue grayNodes = (NodeVectorValue) (MemCache
 				.getInstance().get(this.jobConf.getJobId(),
 				memCacheKey.getMemCacheKeyBase() + memCacheKey.getStart()));
-		
-		//mark nodes to gray according to grayNodes vector
-		int grayIds[] = grayNodes.getArray();
-		for (int id : grayIds) {
-			headNodes.get(id).setTag(CAPConstraints.Gray);
-		}
 		
 		Map<Key, Value> mapOutputKeyValues = new HashMap<Key, Value>();
 		List<Node> curList = null;
 		
-		for (Node node : headNodes.values()) {
-			System.out.println("cur node color is " + node.getTag());
-			if (node.getTag().equalsIgnoreCase(CAPConstraints.Gray)) {
-				curList = nodeMap.get(node.getId());
-				for (Node curNode : curList) {
-					curNode.setTag(CAPConstraints.Gray);
-					curNode.getTraceHistrory().add(node.getId());
-					mapOutputKeyValues.put(new IntKey(curNode.getId()), 
-							curNode);
+		//mark nodes to gray according to grayNodes vector
+		for (Node grayNode : grayNodes.getGrayNodeList()) {
+			curList = nodeMap.get(grayNode.getId());
+			for (Node toMarkNode : curList) {
+				toMarkNode.setTag(CAPConstraints.Gray);
+				if (grayNode.getPathCount() != 0) {
+					for (List<Integer> path : grayNode.getTraceHistrory()) {
+						path.add(grayNode.getId());
+						toMarkNode.getTraceHistrory().add(path);
+						toMarkNode.getNumOfTraceNodes().add(path.size());
+						toMarkNode.incPathCnt();
+					}
+				} else { //first add trace node
+					List<Integer> path = new ArrayList<Integer>();
+					path.add(grayNode.getId());
+					toMarkNode.getTraceHistrory().add(path);
+					toMarkNode.getNumOfTraceNodes().add(path.size());	
+					toMarkNode.incPathCnt();
 				}
-				node.setTag(CAPConstraints.Black);
+				mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
 			}
 		}
 		
 		// collect
-		if (!mapOutputKeyValues.isEmpty())
+		if (!mapOutputKeyValues.isEmpty()) {
+			System.out.println("Empty gray node list!");
 			mapOutputCollector.collect(mapOutputKeyValues);
+		}
 		
 		mapOutputKeyValues.clear();
 		System.out.println("Map task is completed!");

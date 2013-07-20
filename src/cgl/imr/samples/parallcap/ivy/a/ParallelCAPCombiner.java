@@ -18,6 +18,7 @@ import cgl.imr.types.IntKey;
 public class ParallelCAPCombiner implements Combiner {
 
 	SortedMap<Key, Value> results;
+	NodeVectorValue nodeVecVal;
 
 	private class KeyComparator implements Comparator<Key> {
 		@Override
@@ -61,6 +62,13 @@ public class ParallelCAPCombiner implements Combiner {
 	}
 
 	public List<Value> getResults() {
-		return new ArrayList<Value>(results.values());
+		List<Value> valueRes = new ArrayList<Value>();
+		NodeVectorValue res = new NodeVectorValue();
+		for (Value val : results.values()) {
+			res.getGrayNodeList().addAll(((NodeVectorValue)val).getGrayNodeList());
+		}
+		res.setNumOfGrayNodes(res.getGrayNodeList().size());
+		valueRes.add(res);
+		return valueRes;
 	}
 }

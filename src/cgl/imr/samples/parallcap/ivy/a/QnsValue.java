@@ -19,7 +19,7 @@ public class QnsValue implements Value {
 		for (int i = 0; i < numOfQns; i++) {
 			int id = msg.readInt();
 			String tag = msg.readString();
-			node = new Node(id, tag);
+			node = new Node(id);
 			qnsList.add(node);
 		}
 	}
