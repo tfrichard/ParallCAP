@@ -88,7 +88,10 @@ public class ParallCAPMain {
 			grayNodes = ParallCAPMain.driveMapReduce(numMapTasks, numReduceTasks, partitionFile, numLoop);
 			System.out.println("Current gray nodes: ");
 			for (Value val : grayNodes) {
-				System.out.println(((Node)val).getId());
+				NodeVectorValue tmpVec = (NodeVectorValue)val;
+				for (Node node : tmpVec.getGrayNodeList()) {
+					System.out.println(node.getId());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
