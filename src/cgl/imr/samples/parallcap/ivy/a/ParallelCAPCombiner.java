@@ -50,7 +50,9 @@ public class ParallelCAPCombiner implements Combiner {
 	 */
 	public void combine(Map<Key, Value> keyValues) throws TwisterException {
 		// synchronized (this) {
+		System.out.println("value size is: " + keyValues.values().size());
 		for (Key key : keyValues.keySet()) {
+			System.out.println("key is:" + ((IntKey)key).getKey());
 			this.results.put(key, keyValues.get(key));
 		}
 		// }
@@ -68,6 +70,10 @@ public class ParallelCAPCombiner implements Combiner {
 			res.getGrayNodeList().addAll(((NodeVectorValue)val).getGrayNodeList());
 		}
 		res.setNumOfGrayNodes(res.getGrayNodeList().size());
+		System.out.println("all nodes in combiner: ");
+		for (Node node : res.getGrayNodeList()) {
+			System.out.println(node.getId());
+		}
 		valueRes.add(res);
 		return valueRes;
 	}

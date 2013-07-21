@@ -46,16 +46,13 @@ public class ParallelCAPReduceTask implements ReduceTask {
 		
 		List<Node> res = new ArrayList<Node>();
 		for (Value val : values) {
-			System.out.println(((Node)val).getId());
 			res.add((Node)val);
 		}
 		
 		//add matrix elements and eliminate invalid xe-fragment happens here
 		
 		NodeVectorValue nodeVecVal = new NodeVectorValue(values.size(), res);
-		for (int i = 0; i < values.size(); i++) {
-			collector.collect(new IntKey(this.hashCode()), nodeVecVal);
-		}
+		collector.collect(key, nodeVecVal);
 	}
 	
 }

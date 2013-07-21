@@ -98,7 +98,8 @@ public class ParallCAPMapTask implements MapTask {
 					toMarkNode.getNumOfTraceNodes().add(path.size());
 					toMarkNode.incPathCnt();
 				}
-				mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
+				mapOutputKeyValues.put(new IntKey(toMarkNode.getId() % 
+						jobConf.getNumReduceTasks()), toMarkNode);
 			}
 		}
 		
