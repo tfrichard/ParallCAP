@@ -126,6 +126,10 @@ public class ParallCAPMain {
 		List <Value> grayNodes = new ArrayList<Value>();
 		//initialize the dynamic data first
 		int grayNodeSize = qns.getQueryNodes().size();
+		for (Node node : qns.getQueryNodes()) {
+			node.setTag(CAPConstraints.Gray);
+		}
+		
 		NodeVectorValue nodeVecVal = new NodeVectorValue(grayNodeSize, qns.getQueryNodes());
 		grayNodes.add(nodeVecVal);
 		
