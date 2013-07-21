@@ -85,7 +85,8 @@ public class ParallCAPMapTask implements MapTask {
 				System.out.println("to mark gray node id: " + toMarkNode.getId());
 				toMarkNode.setTag(CAPConstraints.Gray);
 				if (grayNode.getPathCount() != 0) {
-					for (List<Integer> path : grayNode.getTraceHistrory()) {
+					for (List<Integer> ppath : grayNode.getTraceHistrory()) {
+						List<Integer> path = new ArrayList<Integer>(ppath);
 						path.add(grayNode.getId());
 						System.out.println("current path is");
 						for (Integer interger : path) {
