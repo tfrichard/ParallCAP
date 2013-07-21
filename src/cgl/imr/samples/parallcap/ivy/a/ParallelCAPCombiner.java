@@ -66,10 +66,14 @@ public class ParallelCAPCombiner implements Combiner {
 	public List<Value> getResults() {
 		List<Value> valueRes = new ArrayList<Value>();
 		NodeVectorValue res = new NodeVectorValue();
+		int cnt = 0;
 		for (Value val : results.values()) {
 			res.getGrayNodeList().addAll(((NodeVectorValue)val).getGrayNodeList());
+			cnt += ((NodeVectorValue)val).getNumOfGrayNodes();
 		}
-		res.setNumOfGrayNodes(res.getGrayNodeList().size());
+		res.setNumOfGrayNodes(cnt);
+		valueRes.add(res);
+		
 		System.out.println("all nodes in combiner: ");
 		for (Node node : res.getGrayNodeList()) {
 			System.out.println(node.getId());
