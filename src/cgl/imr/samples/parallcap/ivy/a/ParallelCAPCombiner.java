@@ -50,6 +50,7 @@ public class ParallelCAPCombiner implements Combiner {
 	 */
 	public void combine(Map<Key, Value> keyValues) throws TwisterException {
 		// synchronized (this) {
+		this.results.clear();
 		System.out.println("value size is: " + keyValues.values().size());
 		for (Key key : keyValues.keySet()) {
 			System.out.println("key is:" + ((IntKey)key).getKey());

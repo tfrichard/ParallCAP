@@ -135,14 +135,14 @@ public class ParallCAPMain {
 		
 		int bfsIterCnt = 0;
 		for (; bfsIterCnt < numLoop; bfsIterCnt++) {
+			System.out.println("Search step " + bfsIterCnt);
 			MemCacheAddress memCacheKey = driver.addToMemCache(grayNodes);
 			TwisterMonitor monitor = driver.runMapReduceBCast(memCacheKey);
 			monitor.monitorTillCompletion();
 			driver.cleanMemCache();
 			grayNodes = ((ParallelCAPCombiner) driver.getCurrentCombiner())
 					.getResults();
-			markQueryMatrix(grayNodes);
-			System.out.println("Search step " + bfsIterCnt);
+			markQueryMatrix(grayNodes);		
 		}
 		driver.close();
 		return grayNodes;
