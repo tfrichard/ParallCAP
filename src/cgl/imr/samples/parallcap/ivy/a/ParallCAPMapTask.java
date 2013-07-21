@@ -52,7 +52,7 @@ public class ParallCAPMapTask implements MapTask {
 		
 		for (List<Node> list : graph.getAdjlist()) {
 			headNodes.put(list.get(0).getId(), list.get(0));
-			nodeMap.put(list.get(0).getId(), list);
+			nodeMap.put(list.get(0).getId(), list.subList(1, list.size()));
 		}
 	}
 

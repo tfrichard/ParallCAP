@@ -39,6 +39,11 @@ public class ParallelCAPReduceTask implements ReduceTask {
 			throw new TwisterException("Reduce input error no values.");
 		}
 		
+		System.out.println("all received gray node ids:");
+		for (Value val : values) {
+			System.out.println(((Node)val).getId());
+		}
+		
 		List<Node> res = new ArrayList<Node>();
 		for (Value val : values) {
 			System.out.println(((Node)val).getId());
