@@ -158,6 +158,8 @@ public class ParallCAPMain {
 				+ " seconds.");
 		System.out
 				.println("------------------------------------------------------");
+		
+		return;
 
 	}
 	
