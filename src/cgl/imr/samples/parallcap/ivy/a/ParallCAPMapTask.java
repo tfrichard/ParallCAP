@@ -76,6 +76,7 @@ public class ParallCAPMapTask implements MapTask {
 				memCacheKey.getMemCacheKeyBase() + memCacheKey.getStart()));
 		
 		Map<Key, Value> mapOutputKeyValues = new HashMap<Key, Value>();
+		
 		List<Node> curList = null;
 		
 		//mark nodes to gray according to grayNodes vector
@@ -103,8 +104,23 @@ public class ParallCAPMapTask implements MapTask {
 					toMarkNode.getNumOfTraceNodes().add(path.size());
 					toMarkNode.incPathCnt();
 				}
+							
+				Node markedNode = null;
+				if ( (markedNode = (Node)mapOutputKeyValues.get(new IntKey(toMarkNode.getId()))) == null)
+					mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
+				else {
+					//we need to merge trace paths if current mark node has more than one
+					//ancestors for the same length
+					for (List<Integer> pathList : markedNode.getTraceHistrory()) {
+						toMarkNode.getTraceHistrory().add(pathList);
+						toMarkNode.getNumOfTraceNodes().add(pathList.size());
+						toMarkNode.incPathCnt();
+					}
+					mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
+				}
+				
 				//print gray node current history path
-				System.out.print("Node id:" + toMarkNode.getId() + "\n" + " path:");
+				System.out.print("Node id:" + toMarkNode.getId() + "\n" + " path");
 				int i = 0;
 				for (List<Integer>  list : toMarkNode.getTraceHistrory()) {
 					System.out.print(i + ": ");
@@ -114,8 +130,6 @@ public class ParallCAPMapTask implements MapTask {
 					i++;
 				}
 				System.out.println("");
-				
-				mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
 			}
 		}
 		
