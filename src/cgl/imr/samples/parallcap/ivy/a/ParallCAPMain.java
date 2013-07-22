@@ -79,7 +79,8 @@ public class ParallCAPMain {
 				Integer src = path.get(0);
 				Integer dst = path.get(path.size()-1);
 				
-				if (queryTable.get(dst) != null) {
+				
+				if (queryTable.get(dst) != null && queryIdMatrix.get(src) != null) {
 					//add this path to cell[src][dst]
 					if (queryIdMatrix.get(src).get(dst) != null) {
 						queryIdMatrix.get(src).get(dst).add(path);
