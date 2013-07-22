@@ -48,6 +48,7 @@ public class ParallCAPMain {
 			}
 		}
 		
+		System.out.println("initial query matrix:");
 		for (Integer m : queryIdMatrix.keySet()) {
 			for (Integer n: queryIdMatrix.get(m).keySet()) {
 				System.out.println("( " + m + ", " + n + " )");
@@ -56,6 +57,7 @@ public class ParallCAPMain {
 		}
 		
 		//initial query table
+		queryTable = new HashMap<Integer, Boolean>();
 		for (Node node : qns.getQueryNodes()) {
 			queryTable.put(node.getId(), true);
 		}
@@ -71,17 +73,19 @@ public class ParallCAPMain {
 		NodeVectorValue grayVector = (NodeVectorValue)grayNodesValue.get(0);
 		List<Node> grayNodes = grayVector.getGrayNodeList();
 		
-		for (Value val : grayNodes) {
-			Node markNode = (Node)val;
+		for (int i = 0; i < grayNodes.size(); i++) {
+			Node markNode = grayNodes.get(i);
 			for (List<Integer> path : markNode.getTraceHistrory()) {
 				Integer src = path.get(0);
 				Integer dst = path.get(path.size()-1);
 				
 				if (queryTable.get(dst) != null) {
 					//add this path to cell[src][dst]
-					queryIdMatrix.get(src).get(dst).add(path);
-					//remove this value because it can never lead us to valid xe-fragment
-					grayNodes.remove(val);
+					if (queryIdMatrix.get(src).get(dst) != null) {
+						queryIdMatrix.get(src).get(dst).add(path);
+						//remove this value because it can never lead us to valid xe-fragment
+						grayNodes.remove(markNode);
+					}
 				}
 			}
 		}
