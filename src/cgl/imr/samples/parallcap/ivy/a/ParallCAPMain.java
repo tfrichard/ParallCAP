@@ -75,7 +75,13 @@ public class ParallCAPMain {
 		
 		for (int i = 0; i < grayNodes.size(); i++) {
 			Node markNode = grayNodes.get(i);
+			System.out.println("currently mark gray node: " + markNode.getId());
 			for (List<Integer> path : markNode.getTraceHistrory()) {
+				System.out.println("path:");
+				for (Integer pathelem : path) {
+					System.out.println(pathelem + " ");
+				}
+				System.out.println("");
 				Integer src = path.get(0);
 				Integer dst = path.get(path.size()-1);
 				
