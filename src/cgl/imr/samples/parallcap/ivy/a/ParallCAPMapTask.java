@@ -83,6 +83,8 @@ public class ParallCAPMapTask implements MapTask {
 		for (Node grayNode : grayNodes.getGrayNodeList()) {
 			curList = nodeMap.get(grayNode.getId());
 			for (Node toMarkNode : curList) {
+				//Node toMarkNode = new Node(tmpNode.getId());
+				/*
 				System.out.println("to mark gray node id: " + toMarkNode.getId());
 				System.out.println("to mark node initial trace path:");
 				for (List<Integer> tmpPath: toMarkNode.getTraceHistrory()) {
@@ -91,6 +93,7 @@ public class ParallCAPMapTask implements MapTask {
 					}
 					System.out.println("");
 				}
+				*/
 				toMarkNode.setTag(CAPConstraints.Gray);
 				if (grayNode.getPathCount() != 0) {
 					for (List<Integer> ppath : grayNode.getTraceHistrory()) {
@@ -126,6 +129,7 @@ public class ParallCAPMapTask implements MapTask {
 					mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
 				}
 				
+				toMarkNode.reset();
 				//print gray node current history path
 				System.out.print("Node id:" + toMarkNode.getId() + "\n" + " path");
 				int i = 0;

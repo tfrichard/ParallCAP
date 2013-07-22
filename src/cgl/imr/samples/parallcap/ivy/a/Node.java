@@ -43,6 +43,12 @@ public class Node implements Value {
 		traceHistrory = new ArrayList<List<Integer>>();
 	}
 	
+	public void reset() {
+		numOfTraceNodes.clear();
+		pathCount = 0;
+		traceHistrory.clear();
+	}
+	
 	public void incPathCnt() { this.pathCount += 1; }
 	
 	public int getId() {
