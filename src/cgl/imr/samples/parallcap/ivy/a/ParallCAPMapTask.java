@@ -100,10 +100,12 @@ public class ParallCAPMapTask implements MapTask {
 					for (List<Integer> ppath : grayNode.getTraceHistrory()) {
 						List<Integer> path = new ArrayList<Integer>(ppath);
 						path.add(grayNode.getId());
+						/*
 						System.out.println("current path is");
 						for (Integer interger : path) {
 							System.out.print(interger + " ");
 						}
+						*/
 						toMarkNode.getTraceHistrory().add(path);
 						toMarkNode.getNumOfTraceNodes().add(path.size());
 						toMarkNode.incPathCnt();
