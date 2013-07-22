@@ -129,7 +129,7 @@ public class ParallCAPMapTask implements MapTask {
 					mapOutputKeyValues.put(new IntKey(toMarkNode.getId()), toMarkNode);
 				}
 				
-				toMarkNode.reset();
+				
 				//print gray node current history path
 				System.out.print("Node id:" + toMarkNode.getId() + "\n" + " path");
 				int i = 0;
@@ -141,6 +141,7 @@ public class ParallCAPMapTask implements MapTask {
 					i++;
 				}
 				System.out.println("");
+				toMarkNode.reset();
 			}
 		}
 		
