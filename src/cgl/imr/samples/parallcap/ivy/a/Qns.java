@@ -75,6 +75,44 @@ public class Qns {
 		return queryNodes;
 	}
 
+	
+	
+	public static int getNumOfCoverage() {
+		return numOfCoverage;
+	}
+
+	public static void setNumOfCoverage(int numOfCoverage) {
+		Qns.numOfCoverage = numOfCoverage;
+	}
+
+	public static int getSizeOfQueryNodes() {
+		return sizeOfQueryNodes;
+	}
+
+	public static void setSizeOfQueryNodes(int sizeOfQueryNodes) {
+		Qns.sizeOfQueryNodes = sizeOfQueryNodes;
+	}
+
+	public static int getLength() {
+		return length;
+	}
+
+	public static void setLength(int length) {
+		Qns.length = length;
+	}
+
+	public static List<List<Node>> getCandidateQns() {
+		return candidateQns;
+	}
+
+	public static void setCandidateQns(List<List<Node>> candidateQns) {
+		Qns.candidateQns = candidateQns;
+	}
+
+	public static void setQueryNodes(List<Node> queryNodes) {
+		Qns.queryNodes = queryNodes;
+	}
+
 	private List<List<Node>> permutationHelper(List<Node> permNodes) {
 		List<List<Node>> permRes = new ArrayList<List<Node>>();
 		List<int[]> permIndexList = permutationHelperImpl(permNodes.size());

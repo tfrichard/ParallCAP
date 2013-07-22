@@ -3,12 +3,14 @@ package cgl.imr.samples.parallcap.ivy.a;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.safehaus.uuid.UUIDGenerator;
 
+import cgl.imr.base.TwisterException;
 import cgl.imr.base.TwisterMonitor;
 import cgl.imr.base.Value;
 import cgl.imr.base.impl.JobConf;
@@ -17,8 +19,9 @@ import cgl.imr.types.MemCacheAddress;
 import cgl.imr.base.SerializationException;
 
 public class ParallCAPMain {
-	private static Map<Integer, Map<Integer, List<Integer>>> queryIdMatrix;
+	private static Map<Integer, Map<Integer, List<List<Integer>>>> queryIdMatrix;
 	private static Qns qns;
+	private static Map<Integer, Boolean> queryTable;  
 	
 	public ParallCAPMain() throws SerializationException{
 		qns = new Qns();
@@ -31,17 +34,17 @@ public class ParallCAPMain {
 			throw new SerializationException(e);
 			};
 
-		queryIdMatrix = new HashMap<Integer, Map<Integer, List<Integer>>>();
+		queryIdMatrix = new HashMap<Integer, Map<Integer, List<List<Integer>>>>();
 		final List<Node> queryList = qns.getQueryNodes();
 		for (int i = 0; i < queryList.size() - 1; i++) {
 			queryIdMatrix.put(queryList.get(i).getId(), 
-					new HashMap<Integer, List<Integer>>());
+					new HashMap<Integer, List<List<Integer>>>());
 		}
 		
 		for (Integer integer : queryIdMatrix.keySet()) {
 			for (int i = 1; i < queryList.size(); i++) {
 				//initialize the matrix so as each cell is empty
-				queryIdMatrix.get(integer).put(queryList.get(i).getId(), new ArrayList<Integer>());
+				queryIdMatrix.get(integer).put(queryList.get(i).getId(), new ArrayList<List<Integer>>());
 			}
 		}
 		
@@ -51,12 +54,50 @@ public class ParallCAPMain {
 			}
 			System.out.println("\n");
 		}
+		
+		//initial query table
+		for (Node node : qns.getQueryNodes()) {
+			queryTable.put(node.getId(), true);
+		}
 	}
 	
 	//mark query matrix based on the current gray node list 
 	//and query nodes
-	private static void markQueryMatrix(List<Value> grayNodes) {
+	private static void markQueryMatrix(List<Value> grayNodesValue) throws Exception{
+		if (grayNodesValue.size() != 1) {
+			//System.out.println("invalid value size in driver");
+			throw new TwisterException("invalid value size in driver");
+		}
+		NodeVectorValue grayVector = (NodeVectorValue)grayNodesValue.get(0);
+		List<Node> grayNodes = grayVector.getGrayNodeList();
 		
+		for (Value val : grayNodes) {
+			Node markNode = (Node)val;
+			for (List<Integer> path : markNode.getTraceHistrory()) {
+				Integer src = path.get(0);
+				Integer dst = path.get(path.size()-1);
+				
+				if (queryTable.get(dst) != null) {
+					//add this path to cell[src][dst]
+					queryIdMatrix.get(src).get(dst).add(path);
+					//remove this value because it can never lead us to valid xe-fragment
+					grayNodes.remove(val);
+				}
+			}
+		}
+		//print current query matrix
+		for (Integer m : queryIdMatrix.keySet()) {
+			for (Integer n: queryIdMatrix.get(m).keySet()) {
+				System.out.println("( " + m + ", " + n + " )");
+				for (List<Integer> path : queryIdMatrix.get(m).get(n)) {
+					for (Integer integer : path) {
+						System.out.print(integer + " ");
+					}
+					System.out.println("");
+				}
+			}
+			System.out.println("\n");
+		}
 	}
 
 	/**
@@ -112,6 +153,8 @@ public class ParallCAPMain {
 	public static List<Value> driveMapReduce(int numMapTasks, int numReduceTasks, 
 			String partitionFile, int numLoop) throws Exception {
 		//JobConfigurations
+		Hashtable<String, String> properties = new Hashtable<String, String>();
+		properties.put("PATHLIMIT", String.valueOf(qns.getLength()));
 		JobConf jobConf = new JobConf("ParallCap-map-reduce"
 				+ UUIDGenerator.getInstance().generateTimeBasedUUID());
 		jobConf.setMapperClass(ParallCAPMapTask.class);
@@ -120,6 +163,7 @@ public class ParallCAPMain {
 		jobConf.setNumMapTasks(numMapTasks);
 		jobConf.setNumReduceTasks(numReduceTasks);
 		jobConf.setFaultTolerance();
+		jobConf.setProperties(properties);
 		TwisterDriver driver = new TwisterDriver(jobConf);
 		driver.configureMaps(partitionFile);
 		

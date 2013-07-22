@@ -14,6 +14,8 @@ import cgl.imr.types.IntKey;
 import cgl.imr.types.IntValue;
 
 public class ParallelCAPReduceTask implements ReduceTask {
+	
+	JobConf jobConf;
 
 	@Override
 	public void close() throws TwisterException {
@@ -25,7 +27,7 @@ public class ParallelCAPReduceTask implements ReduceTask {
 	public void configure(JobConf jobConf, ReducerConf reducerConf)
 			throws TwisterException {
 		// TODO Auto-generated method stub
-		
+		this.jobConf = jobConf;
 	}
 
 	@Override
@@ -35,13 +37,20 @@ public class ParallelCAPReduceTask implements ReduceTask {
 		System.out.println(" Key: " + ((IntKey)key).getKey() +
 				" Value Size: " + values.size());
 		
-		if (values.size() <= 0) {
-			throw new TwisterException("Reduce input error no values.");
+		if (values.size() != 1) {
+			throw new TwisterException("Reduce input error: invalid values.");
 		}
 		
 		System.out.println("all received gray node ids:");
 		for (Value val : values) {
-			System.out.println(((Node)val).getId());
+			Node node = (Node)val;
+			System.out.println(node.getId());
+			for (List<Integer> path : node.getTraceHistrory()) {
+				if (path.size() < Integer.parseInt(jobConf.getProperty("PATHLIMIT"))) {
+					//valid length
+					
+				}
+			}
 		}
 		
 		List<Node> res = new ArrayList<Node>();
