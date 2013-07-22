@@ -81,12 +81,12 @@ public class ParallCAPMain {
 				
 				if (queryTable.get(dst) != null) {
 					//add this path to cell[src][dst]
-					//if (queryIdMatrix.get(src).get(dst) != null) {
+					if (queryIdMatrix.get(src).get(dst) != null) {
 						queryIdMatrix.get(src).get(dst).add(path);
 						//remove this value because it can never lead us to valid xe-fragment
 						grayNodes.remove(markNode);
 						
-					//}
+					}
 				}
 			}
 		}
