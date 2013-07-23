@@ -159,8 +159,7 @@ public class ParallCAPMain {
 		System.out
 				.println("------------------------------------------------------");
 		
-		return;
-
+		System.exit(0);
 	}
 	
 	public static List<Value> driveMapReduce(int numMapTasks, int numReduceTasks, 
