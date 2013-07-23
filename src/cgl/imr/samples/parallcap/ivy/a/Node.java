@@ -92,12 +92,13 @@ public class Node implements Value {
 	public void fromTwisterMessage(TwisterMessage msg)
 			throws SerializationException {
 		// TODO Auto-generated method stub
+		System.out.println("msg length is: " + msg.getLength());
 		id = msg.readInt();
 		tag = msg.readString();	
 		pathCount = msg.readInt();
 		numOfTraceNodes = new ArrayList<Integer>();
 		for (int i = 0; i < pathCount; i++)
-			numOfTraceNodes.add(msg.readInt());		
+			numOfTraceNodes.add(msg.readInt());
 		traceHistrory = new ArrayList<List<Integer>>();
 
 		for (int i = 0; i < pathCount; i++) {
