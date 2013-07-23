@@ -19,7 +19,7 @@ public class Node implements Value {
 	 * */
 	private String tag;
 	//how many paths going through the node
-	private int pathCount;
+	public int pathCount;
 	//how many nodes each path has
 	private List<Integer> numOfTraceNodes;
 	//nodes on each path

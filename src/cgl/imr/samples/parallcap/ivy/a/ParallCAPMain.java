@@ -1,5 +1,9 @@
 package cgl.imr.samples.parallcap.ivy.a;
 
+/*
+ * Main program for parallel CAP path discovery Twister application.
+ * @author Fei Teng tf.richard@gmail.com
+ * */
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,6 +163,7 @@ public class ParallCAPMain {
 		System.out
 				.println("------------------------------------------------------");
 		
+		//exit(0) is necessary or else app will not return to os. reason unknown
 		System.exit(0);
 	}
 	

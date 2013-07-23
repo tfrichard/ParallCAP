@@ -69,8 +69,10 @@ public class ParallelCAPCombiner implements Combiner {
 		NodeVectorValue res = new NodeVectorValue();
 		int cnt = 0;
 		for (Value val : results.values()) {
-			res.getGrayNodeList().addAll(((NodeVectorValue)val).getGrayNodeList());
-			cnt += ((NodeVectorValue)val).getNumOfGrayNodes();
+			//res.getGrayNodeList().addAll(((NodeVectorValue)val).getGrayNodeList());
+			res.getGrayNodeList().add((Node)val);
+			cnt += 1;
+			//cnt += ((NodeVectorValue)val).getNumOfGrayNodes();
 		}
 		res.setNumOfGrayNodes(cnt);
 		

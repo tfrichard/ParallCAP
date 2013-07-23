@@ -41,27 +41,31 @@ public class ParallelCAPReduceTask implements ReduceTask {
 			throw new TwisterException("Reduce input error: invalid values.");
 		}
 		
+		//need to merge values' path histories with the same node id
+		Node mergedNode = new Node(((Node)values.get(0)).getId());
+		mergedNode.setTag(CAPConstraints.Gray);
+		
 		System.out.println("all received gray node ids:");
 		for (Value val : values) {
 			Node node = (Node)val;
 			System.out.println(node.getId());
+			
+			mergedNode.getNumOfTraceNodes().addAll(node.getNumOfTraceNodes());
 			for (List<Integer> path : node.getTraceHistrory()) {
-				if (path.size() < Integer.parseInt(jobConf.getProperty("PATHLIMIT"))) {
-					//valid length
-					
-				}
+				mergedNode.getTraceHistrory().add(path);
 			}
+			mergedNode.pathCount += node.getPathCount();
 		}
-		
-		List<Node> res = new ArrayList<Node>();
+
+		/*List<Node> res = new ArrayList<Node>();
 		for (Value val : values) {
 			res.add((Node)val);
 		}
 		
 		//add matrix elements and eliminate invalid xe-fragment happens here
 		
-		NodeVectorValue nodeVecVal = new NodeVectorValue(values.size(), res);
-		collector.collect(key, nodeVecVal);
+		NodeVectorValue nodeVecVal = new NodeVectorValue(values.size(), res);*/
+		collector.collect(key, mergedNode);
 	}
 	
 }
