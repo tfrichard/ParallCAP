@@ -82,6 +82,8 @@ public class ParallCAPMapTask implements MapTask {
 		//mark nodes to gray according to grayNodes vector
 		for (Node grayNode : grayNodes.getGrayNodeList()) {
 			curList = nodeMap.get(grayNode.getId());
+			if (curList == null) continue;
+			
 			for (Node tmp : curList) {
 				//Node toMarkNode = new Node(tmpNode.getId());
 				/*
@@ -151,7 +153,7 @@ public class ParallCAPMapTask implements MapTask {
 		if (!mapOutputKeyValues.isEmpty()) {
 			mapOutputCollector.collect(mapOutputKeyValues);
 		} else {
-			System.out.println("Empty gray node list!");
+			System.out.println("Nothing to add for this map!");
 		}
 		
 		mapOutputKeyValues.clear();

@@ -196,6 +196,11 @@ public class ParallCAPMain {
 		
 		int bfsIterCnt = 0;
 		for (; bfsIterCnt < numLoop; bfsIterCnt++) {
+			if (((NodeVectorValue)(grayNodes.get(0))).getGrayNodeList().isEmpty())
+			{
+				System.out.println("No more expand, search completed!");
+				System.exit(0);
+			}
 			System.out.println("Search step " + bfsIterCnt);
 			MemCacheAddress memCacheKey = driver.addToMemCache(grayNodes);
 			TwisterMonitor monitor = driver.runMapReduceBCast(memCacheKey);
