@@ -92,7 +92,6 @@ public class Node implements Value {
 	public void fromTwisterMessage(TwisterMessage msg)
 			throws SerializationException {
 		// TODO Auto-generated method stub
-		System.out.println("msg length is: " + msg.getLength());
 		id = msg.readInt();
 		tag = msg.readString();	
 		pathCount = msg.readInt();
