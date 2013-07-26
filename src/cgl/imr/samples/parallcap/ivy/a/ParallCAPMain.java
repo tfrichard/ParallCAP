@@ -196,12 +196,27 @@ public class ParallCAPMain {
 		
 		int bfsIterCnt = 0;
 		for (; bfsIterCnt < numLoop; bfsIterCnt++) {
-			if (((NodeVectorValue)(grayNodes.get(0))).getGrayNodeList().isEmpty())
+			List<Node> curNodes = ((NodeVectorValue)(grayNodes.get(0))).getGrayNodeList();
+			if (curNodes.isEmpty())
 			{
 				System.out.println("No more expand, search completed!");
 				System.exit(0);
 			}
+			
+			
 			System.out.println("Search step " + bfsIterCnt);
+			for (Node node : curNodes) {
+				System.out.println("id: " + node.getId());
+				System.out.println("pathCnt: " + node.getPathCount());
+				for (List<Integer> path : node.getTraceHistrory()) {
+					System.out.print("Path: ");
+					for (Integer i : path) {
+						System.out.print(i + " ");
+					}
+					System.out.println("");
+				}
+			}
+			
 			MemCacheAddress memCacheKey = driver.addToMemCache(grayNodes);
 			TwisterMonitor monitor = driver.runMapReduceBCast(memCacheKey);
 			monitor.monitorTillCompletion();
