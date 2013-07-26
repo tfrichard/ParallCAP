@@ -37,9 +37,9 @@ public class ParallelCAPReduceTask implements ReduceTask {
 		System.out.println(" Key: " + ((IntKey)key).getKey() +
 				" Value Size: " + values.size());
 		
-		if (values.size() != 1) {
-			throw new TwisterException("Reduce input error: invalid values.");
-		}
+//		if (values.size() != 1) {
+//			throw new TwisterException("Reduce input error: invalid values.");
+//		}
 		
 		//need to merge values' path histories with the same node id
 		Node mergedNode = new Node(((Node)values.get(0)).getId());
