@@ -81,6 +81,7 @@ public class ParallelCAPCombiner implements Combiner {
 			System.out.println(node.getId());
 		}
 		valueRes.add(res);
+		results.clear();
 		return valueRes;
 	}
 }
