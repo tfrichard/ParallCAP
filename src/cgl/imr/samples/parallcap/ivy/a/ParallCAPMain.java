@@ -95,7 +95,7 @@ public class ParallCAPMain {
 						queryIdMatrix.get(src).get(dst).add(path);
 						//remove this value because it can never lead us to valid xe-fragment
 						grayNodes.remove(markNode);
-						
+						grayVector.decNum(1); //decrease number of gray nodes by one
 					}
 				}
 			}

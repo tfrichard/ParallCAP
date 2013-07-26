@@ -39,6 +39,8 @@ public class NodeVectorValue implements Value {
 	public void setGrayNodeList(List<Node> grayNodeList) {
 		this.grayNodeList = grayNodeList;
 	}
+	
+	public void decNum(int k) { this.numOfGrayNodes -= k; }
 
 	@Override
 	public void fromTwisterMessage(TwisterMessage msg)
