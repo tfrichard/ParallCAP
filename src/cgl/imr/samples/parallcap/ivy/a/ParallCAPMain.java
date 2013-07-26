@@ -208,6 +208,9 @@ public class ParallCAPMain {
 			for (Node node : curNodes) {
 				System.out.println("id: " + node.getId());
 				System.out.println("pathCnt: " + node.getPathCount());
+				for (Integer j : node.getNumOfTraceNodes()) {
+					System.out.println(j);
+				}
 				for (List<Integer> path : node.getTraceHistrory()) {
 					System.out.print("Path: ");
 					for (Integer i : path) {
