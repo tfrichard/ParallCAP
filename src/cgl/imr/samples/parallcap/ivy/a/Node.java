@@ -93,7 +93,7 @@ public class Node implements Value {
 			throws SerializationException {
 		// TODO Auto-generated method stub
 		id = msg.readInt();
-		System.out.println("Now de-se node: " + id);
+		//System.out.println("Now de-se node: " + id);
 		tag = msg.readString();	
 		pathCount = msg.readInt();
 		numOfTraceNodes = new ArrayList<Integer>();

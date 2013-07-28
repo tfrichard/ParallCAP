@@ -34,8 +34,8 @@ public class ParallelCAPReduceTask implements ReduceTask {
 	public void reduce(ReduceOutputCollector collector, Key key, List<Value> values)
 			throws TwisterException {
 		// TODO Auto-generated method stub
-		System.out.println(" Key: " + ((IntKey)key).getKey() +
-				" Value Size: " + values.size());
+		//System.out.println(" Key: " + ((IntKey)key).getKey() +
+		//		" Value Size: " + values.size());
 		
 //		if (values.size() != 1) {
 //			throw new TwisterException("Reduce input error: invalid values.");
@@ -45,10 +45,10 @@ public class ParallelCAPReduceTask implements ReduceTask {
 		Node mergedNode = new Node(((Node)values.get(0)).getId());
 		mergedNode.setTag(CAPConstraints.Gray);
 		
-		System.out.println("all received gray node ids:");
+		//System.out.println("all received gray node ids:");
 		for (Value val : values) {
 			Node node = (Node)val;
-			System.out.println(node.getId());
+		//	System.out.println(node.getId());
 			
 			mergedNode.getNumOfTraceNodes().addAll(node.getNumOfTraceNodes());
 			for (List<Integer> path : node.getTraceHistrory()) {

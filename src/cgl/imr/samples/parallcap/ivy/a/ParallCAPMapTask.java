@@ -136,6 +136,7 @@ public class ParallCAPMapTask implements MapTask {
 				
 				
 				//print gray node current history path
+				/*
 				System.out.print("Node id:" + toMarkNode.getId() + "\n" + " path");
 				int i = 0;
 				for (List<Integer>  list : toMarkNode.getTraceHistrory()) {
@@ -146,6 +147,7 @@ public class ParallCAPMapTask implements MapTask {
 					i++;
 				}
 				System.out.println("");
+				*/
 			}
 		}
 		

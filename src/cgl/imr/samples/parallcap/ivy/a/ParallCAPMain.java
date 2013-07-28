@@ -196,6 +196,7 @@ public class ParallCAPMain {
 		
 		int bfsIterCnt = 0;
 		for (; bfsIterCnt < numLoop; bfsIterCnt++) {
+			double iterBeginTime = System.currentTimeMillis();
 			List<Node> curNodes = ((NodeVectorValue)(grayNodes.get(0))).getGrayNodeList();
 			if (curNodes.isEmpty())
 			{
@@ -226,7 +227,10 @@ public class ParallCAPMain {
 			driver.cleanMemCache();
 			grayNodes = ((ParallelCAPCombiner) driver.getCurrentCombiner())
 					.getResults();
-			markQueryMatrix(grayNodes);		
+			markQueryMatrix(grayNodes);
+			double iterEndTime = System.currentTimeMillis();
+			double timeInSeconds = ((double)(iterEndTime - iterBeginTime)) / 1000;
+			System.out.println("Iteration " + bfsIterCnt + " takes " + timeInSeconds);
 		}
 		driver.close();
 		return grayNodes;
