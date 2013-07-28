@@ -79,13 +79,13 @@ public class ParallCAPMain {
 		
 		for (int i = 0; i < grayNodes.size(); i++) {
 			Node markNode = grayNodes.get(i);
-			System.out.println("currently mark gray node: " + markNode.getId());
+			//System.out.println("currently mark gray node: " + markNode.getId());
 			for (List<Integer> path : markNode.getTraceHistrory()) {
-				System.out.println("path:");
-				for (Integer pathelem : path) {
-					System.out.println(pathelem + " ");
-				}
-				System.out.println("");
+//				System.out.println("path:");
+//				for (Integer pathelem : path) {
+//					System.out.println(pathelem + " ");
+//				}
+//				System.out.println("");
 				Integer src = path.get(0);
 				Integer dst = markNode.getId();
 				
@@ -142,13 +142,13 @@ public class ParallCAPMain {
 		double beginTime = System.currentTimeMillis();
 		try {
 			grayNodes = ParallCAPMain.driveMapReduce(numMapTasks, numReduceTasks, partitionFile, numLoop);
-			System.out.println("Current gray nodes: ");
-			for (Value val : grayNodes) {
-				NodeVectorValue tmpVec = (NodeVectorValue)val;
-				for (Node node : tmpVec.getGrayNodeList()) {
-					System.out.println(node.getId());
-				}
-			}
+			System.out.println("Current gray nodes size: " + ((NodeVectorValue)grayNodes.get(0)).getGrayNodeList().size());
+//			for (Value val : grayNodes) {
+//				NodeVectorValue tmpVec = (NodeVectorValue)val;
+//				for (Node node : tmpVec.getGrayNodeList()) {
+//					System.out.println(node.getId());
+//				}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
