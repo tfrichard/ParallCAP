@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import cgl.imr.base.Combiner;
@@ -17,7 +18,7 @@ import cgl.imr.types.IntKey;
 
 public class ParallelCAPCombiner implements Combiner {
 
-	SortedMap<Key, Value> results;
+	Map<Key, Value> results;
 	NodeVectorValue nodeVecVal;
 
 	private class KeyComparator implements Comparator<Key> {
@@ -37,8 +38,9 @@ public class ParallelCAPCombiner implements Combiner {
 	}
 
 	public ParallelCAPCombiner() {
-		results = Collections.synchronizedSortedMap(new TreeMap<Key, Value>(
-				new KeyComparator()));
+		//results = Collections.synchronizedSortedMap(new sortedMap<Key, Value>(
+		//		new KeyComparator()));
+		results = Collections.synchronizedMap(new HashMap<Key, Value>());
 	}
 
 	public void close() throws TwisterException {
@@ -50,7 +52,7 @@ public class ParallelCAPCombiner implements Combiner {
 	 */
 	public void combine(Map<Key, Value> keyValues) throws TwisterException {
 		// synchronized (this) {
-		this.results.clear();
+		//this.results.clear();
 		//System.out.println("value size is: " + keyValues.values().size());
 		for (Key key : keyValues.keySet()) {
 			//System.out.println("key is:" + ((IntKey)key).getKey());
